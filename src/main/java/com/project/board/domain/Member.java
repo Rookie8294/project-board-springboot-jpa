@@ -25,13 +25,17 @@ public class Member extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
-    public Member(String email, String password, String name, Address address, Gender gender) {
+    public Member(String email, String password, String name, Address address, Gender gender, Role role) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.address = address;
         this.gender = gender;
+        this.role = role;
         this.setCreateTime(LocalDateTime.now());
     }
 }

@@ -23,7 +23,7 @@ public class PostServiceTest {
 
     @Test
     @DisplayName("게시글 등록")
-    void posting() {
+    void savePost() {
         //given
         // 회원 생성
         Long memberId = createMember();
@@ -57,13 +57,15 @@ public class PostServiceTest {
 
         //when
         // 게시글 수정
-        Long updatePostId = postService.updatePost(postId, modifiedPostFormDto);
+        postService.updatePost(postId, modifiedPostFormDto);
 
         //then
         // 수정 후 게시글 조회
         ResPostDto resPostDto = postService.findPostById(postId);
         Assertions.assertNotEquals("originalTitle", resPostDto.getTitle());
         Assertions.assertNotEquals("originalContent", resPostDto.getContent());
+        Assertions.assertEquals("modifiedTitle", resPostDto.getTitle());
+        Assertions.assertEquals("modifiedContent", resPostDto.getContent());
 
     }
 
@@ -90,13 +92,14 @@ public class PostServiceTest {
 
     }
 
-
     public Long createMember(){
         MemberDto memberDto = MemberDto.builder()
                 .name("test")
                 .email("test@test.com")
                 .gender(Gender.M)
-                .address(new Address("city", "street", "zipcode"))
+                .city("city")
+                .street("street")
+                .zipcode("zipcode")
                 .password("test1234")
                 .build();
 

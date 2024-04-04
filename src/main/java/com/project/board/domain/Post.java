@@ -27,11 +27,11 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
         this.member = member;
-        this.setCreateTime(LocalDateTime.now());
     }
 
     public void update(String title, String content ){
         this.title = title;
         this.content = content;
     }
+
 }

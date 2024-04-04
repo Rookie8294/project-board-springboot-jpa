@@ -18,10 +18,10 @@ public class ResMemberDto {
     private Address address;
     private Gender gender;
     private Role role;
-    private LocalDateTime time;
+    private String time;
 
     @Builder
-    public ResMemberDto(Long id, String email, String password, String name, Address address, Gender gender, Role role, LocalDateTime time) {
+    public ResMemberDto(Long id, String email, String password, String name, Address address, Gender gender, Role role, String time) {
         this.id = id;
         this.email = email;
         this.password = password;

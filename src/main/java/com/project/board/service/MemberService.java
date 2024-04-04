@@ -52,7 +52,7 @@ public class MemberService implements UserDetailsService {
                 .email(member.getEmail())
                 .gender(member.getGender())
                 .role(member.getRole())
-                .time(member.getCreateTime())
+                .time(member.getModifiedDate())
                 .build();
 
         return resMemberDto;

@@ -1,22 +1,13 @@
 package com.project.board;
 
-import com.project.board.auth.CustomAuthenticationFailureHandler;
+import com.project.board.domain.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -36,13 +27,13 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/post/**").hasRole("USER")
+                        .requestMatchers("/post").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .anyRequest().permitAll()
                 )
-                .formLogin( (formLogin) -> formLogin
-                        .loginPage("/loginForm")
+                .formLogin((formLogin) -> formLogin
+                        .loginPage("/members/login")
                         .loginProcessingUrl("/loginProc")
                         .usernameParameter("email")
                         .passwordParameter("password")
@@ -50,12 +41,13 @@ public class WebSecurityConfig{
                         .failureHandler(customFailureHandler)
                         .permitAll()
                 )
-                .logout( (logout) -> logout
+                .logout((logout) -> logout
                         .logoutUrl("/logoutProc")
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
-                .csrf(AbstractHttpConfigurer::disable ); //로컬 환경에서 확인을 위해 disable;
+                .csrf((csrf) -> csrf.disable()
+                ); //로컬 환경에서 확인을 위해 disable;
 
 
         return http.build();

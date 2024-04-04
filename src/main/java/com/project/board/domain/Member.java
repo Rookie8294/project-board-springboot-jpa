@@ -36,7 +36,6 @@ public class Member extends BaseEntity{
         this.address = address;
         this.gender = gender;
         this.role = role;
-        this.setCreateTime(LocalDateTime.now());
     }
 }
 

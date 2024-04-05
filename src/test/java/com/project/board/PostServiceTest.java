@@ -32,7 +32,7 @@ public class PostServiceTest {
 
         //when
         // 게시글 등록
-        Long postId = postService.savePost(memberId, postFormDto);
+        Long postId = postService.savePost(postFormDto,memberId);
 
         //then
         // 등록된 게시글 조회
@@ -51,13 +51,13 @@ public class PostServiceTest {
         // 게시글 생성
         PostFormDto postFormDto = new PostFormDto("originalTitle", "originalContent");
         // 게시글 등록
-        Long postId = postService.savePost(memberId, postFormDto);
+        Long postId = postService.savePost(postFormDto, memberId);
         // 수정할 게시글 생성
         PostFormDto modifiedPostFormDto = new PostFormDto("modifiedTitle", "modifiedContent");
 
         //when
         // 게시글 수정
-        postService.updatePost(postId, modifiedPostFormDto);
+        postService.updatePost(modifiedPostFormDto, postId);
 
         //then
         // 수정 후 게시글 조회
@@ -78,7 +78,7 @@ public class PostServiceTest {
         // 게시글 생성
         PostFormDto postFormDto = new PostFormDto("originalTitle", "originalContent");
         // 게시글 등록
-        Long postId = postService.savePost(memberId, postFormDto);
+        Long postId = postService.savePost(postFormDto, memberId);
 
         //when
         // 게시글 삭제

@@ -1,5 +1,6 @@
 package com.project.board.service;
 
+import com.project.board.auth.MemberDetails;
 import com.project.board.domain.Member;
 import com.project.board.domain.Post;
 import com.project.board.dto.PostFormDto;
@@ -8,8 +9,12 @@ import com.project.board.repository.MemberRepository;
 import com.project.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.extras.springsecurity6.util.SpringSecurityContextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +29,10 @@ public class PostService {
 
     // 게시글 등록
     @Transactional
-    @PreAuthorize("hasRole('USER')")
-    public Long savePost(Long userId, PostFormDto postFormDto){
-        Member member = memberRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+    @PreAuthorize("isAuthenticated()")
+    public Long savePost(PostFormDto postFormDto, Long id){
+        Member member = memberRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
         Post post = Post.builder()
                 .title(postFormDto.getTitle())
                 .content(postFormDto.getContent())
@@ -40,7 +46,7 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public Long updatePost(Long postId, PostFormDto postFormDto){
+    public Long updatePost(PostFormDto postFormDto, Long postId ){
         Post post = postRepository.findById(postId).orElseThrow(()-> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         post.update(postFormDto.getTitle(), postFormDto.getContent());

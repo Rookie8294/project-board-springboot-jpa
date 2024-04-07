@@ -8,6 +8,10 @@ import com.project.board.dto.ResPostDto;
 import com.project.board.repository.MemberRepository;
 import com.project.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,6 +94,24 @@ public class PostService {
         }
 
         return resPostDtoList;
+    }
+
+    // 게시글 전체 조회(페이징)
+    public Page<ResPostDto> findAllPostPage(Pageable pageable){
+
+        Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.ASC, "id")));
+
+        Page<ResPostDto> postResDto = postPages.map(
+                post -> ResPostDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .author(post.getMember().getName())
+                        .postTime(post.getModifiedDate())
+                        .build()
+        );
+
+        return postResDto;
     }
 
 }

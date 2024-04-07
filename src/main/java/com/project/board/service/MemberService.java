@@ -1,7 +1,6 @@
 package com.project.board.service;
 
 
-import com.project.board.auth.MemberContext;
 import com.project.board.auth.MemberDetails;
 import com.project.board.domain.Address;
 import com.project.board.domain.Member;
@@ -10,17 +9,12 @@ import com.project.board.dto.MemberDto;
 import com.project.board.dto.ResMemberDto;
 import com.project.board.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,10 +62,6 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email);
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        authorities.add(new SimpleGrantedAuthority(member.getRole().value()));
-
-        return new MemberContext(member, authorities);
+        return new MemberDetails(member);
     }
 }

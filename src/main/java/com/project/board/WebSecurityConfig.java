@@ -1,5 +1,6 @@
 package com.project.board;
 
+import com.project.board.auth.CustomAuthenticationFailureHandler;
 import com.project.board.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -16,7 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @RequiredArgsConstructor
 public class WebSecurityConfig{
 
-    private final AuthenticationFailureHandler customFailureHandler;
+    private final CustomAuthenticationFailureHandler customFailureHandler;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -27,7 +28,7 @@ public class WebSecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/post").hasRole("USER")
+                        .requestMatchers("/post", "members/myPage").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .anyRequest().permitAll()

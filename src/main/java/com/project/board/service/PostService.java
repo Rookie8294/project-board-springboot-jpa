@@ -67,9 +67,9 @@ public class PostService {
     // 게시글 조회
     public ResPostDto findPostById(Long postId){
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
-
         return ResPostDto.builder()
                 .id(post.getId())
+                .userId(post.getMember().getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .author(post.getMember().getName())
@@ -99,7 +99,26 @@ public class PostService {
     // 게시글 전체 조회(페이징)
     public Page<ResPostDto> findAllPostPage(Pageable pageable){
 
-        Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.ASC, "id")));
+        Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ResPostDto> postResDto = postPages.map(
+                post -> ResPostDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .author(post.getMember().getName())
+                        .postTime(post.getModifiedDate())
+                        .build()
+        );
+
+        return postResDto;
+    }
+
+    // 회원 게시글 조회(페이징)
+    @PreAuthorize("isAuthenticated()")
+    public Page<ResPostDto> findAllPostPageById(Pageable pageable, Long id){
+
+        Page<Post> postPages = postRepository.findByUserId(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.DESC, "id")), id);
 
         Page<ResPostDto> postResDto = postPages.map(
                 post -> ResPostDto.builder()

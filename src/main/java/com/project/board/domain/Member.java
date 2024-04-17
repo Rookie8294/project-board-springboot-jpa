@@ -37,5 +37,12 @@ public class Member extends BaseEntity{
         this.gender = gender;
         this.role = role;
     }
+
+    public void update(String email, String password, String name, Address address) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+    }
 }
 

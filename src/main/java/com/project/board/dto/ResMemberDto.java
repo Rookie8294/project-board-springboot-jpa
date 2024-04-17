@@ -13,7 +13,6 @@ public class ResMemberDto {
 
     private Long id;
     private String email;
-    private String password;
     private String name;
     private Address address;
     private Gender gender;
@@ -21,10 +20,9 @@ public class ResMemberDto {
     private String time;
 
     @Builder
-    public ResMemberDto(Long id, String email, String password, String name, Address address, Gender gender, Role role, String time) {
+    public ResMemberDto(Long id, String email, String name, Address address, Gender gender, Role role, String time) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.name = name;
         this.address = address;
         this.gender = gender;

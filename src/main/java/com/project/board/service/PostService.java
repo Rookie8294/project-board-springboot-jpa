@@ -66,7 +66,8 @@ public class PostService {
 
     // 게시글 조회
     public ResPostDto findPostById(Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        //Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        Post post = postRepository.findOnePostById(postId);
         return ResPostDto.builder()
                 .id(post.getId())
                 .userId(post.getMember().getId())
@@ -79,7 +80,8 @@ public class PostService {
 
     // 게시글 전체 조회
     public List<ResPostDto> findAllPost(){
-        List<Post> list = postRepository.findAll();
+        //List<Post> list = postRepository.findAll();
+        List<Post> list = postRepository.findAllPostList();
         List<ResPostDto> resPostDtoList = new ArrayList<>();
         for( Post post : list ){
             ResPostDto resPostDto = ResPostDto.builder()
@@ -87,6 +89,7 @@ public class PostService {
                     .title(post.getTitle())
                     .content(post.getContent())
                     .author(post.getMember().getName())
+                    .userId(post.getMember().getId())
                     .postTime(post.getModifiedDate())
                     .build();
 
@@ -99,14 +102,15 @@ public class PostService {
     // 게시글 전체 조회(페이징)
     public Page<ResPostDto> findAllPostPage(Pageable pageable){
 
-        Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.DESC, "id")));
-
+        //Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber() - 1, 3, Sort.by(Sort.Direction.DESC, "id")));
+        Page<Post> postPages = postRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort()));
         Page<ResPostDto> postResDto = postPages.map(
                 post -> ResPostDto.builder()
                         .id(post.getId())
                         .title(post.getTitle())
                         .content(post.getContent())
                         .author(post.getMember().getName())
+                        .userId(post.getMember().getId())
                         .postTime(post.getModifiedDate())
                         .build()
         );
